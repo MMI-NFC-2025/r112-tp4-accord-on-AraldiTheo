@@ -1,3 +1,101 @@
-/**
-* Accordeon
+/* Accordéon component styles
+	 - styles for closed and open (`details` / `details[open]`)
+	 - hides the native marker and adds a CSS triangle
+	 - adds transitions and accessible focus styles
 */
+
+.accordeon {
+	max-width: 800px;
+	margin: 1rem auto;
+	font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+.accordeon > details {
+	border: 1px solid #e6e6e6;
+	border-radius: 6px;
+	margin: 0.5rem 0;
+	overflow: hidden;
+	background: #ffffff;
+	transition: box-shadow 190ms ease, border-color 190ms ease;
+}
+
+/* état ouvert */
+.accordeon > details[open] {
+	box-shadow: 0 6px 18px rgba(22, 22, 22, 0.06);
+	border-color: #e0e7ff;
+}
+
+.accordeon > details > summary {
+	/* supprime le marqueur natif et rend le summary agissant comme un bouton */
+	list-style: none;
+	cursor: pointer;
+	padding: 0.9rem 1rem;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	user-select: none;
+	gap: 0.5rem;
+	font-weight: 600;
+	color: #111827;
+}
+
+/* remove native triangle/marker across browsers */
+.accordeon > details > summary::marker,
+.accordeon > details > summary::-webkit-details-marker {
+	display: none;
+}
+
+/* custom triangle using CSS borders */
+.accordeon > details > summary::after {
+	content: "";
+	width: 0;
+	height: 0;
+	border-top: 6px solid transparent;
+	border-bottom: 6px solid transparent;
+	border-left: 9px solid currentColor; /* triangle pointing right */
+	margin-left: 1rem;
+	transform: rotate(0deg);
+	transition: transform 180ms ease;
+}
+
+/* rotate triangle when open (pointing down) */
+.accordeon > details[open] > summary::after {
+	transform: rotate(90deg);
+}
+
+/* content area: allow different markup inside details (p, div, .content)
+	 Use a selector that matches common patterns. */
+.accordeon > details > .content,
+.accordeon > details > p,
+.accordeon > details > div {
+	padding: 0.9rem 1rem;
+	border-top: 1px solid #f1f5f9;
+	background: #fbfdff;
+	color: #334155;
+	line-height: 1.45;
+}
+
+/* small expand/collapse animation using max-height for nicer effect */
+.accordeon > details > .content {
+	max-height: 0;
+	overflow: hidden;
+	transition: max-height 260ms ease;
+}
+.accordeon > details[open] > .content {
+	/* large enough for most content blocks */
+	max-height: 1200px;
+}
+
+/* focus-visible for keyboard users */
+.accordeon > details > summary:focus {
+	outline: 3px solid rgba(99, 102, 241, 0.25);
+	outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.accordeon > details > summary::after,
+	.accordeon > details > .content {
+		transition: none;
+	}
+}
+
